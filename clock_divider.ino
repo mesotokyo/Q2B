@@ -210,23 +210,30 @@ void update_state() {
     ch2_shift = (shift_base >> ch2_div) * analogRead(CH2_ROT) / 1024;
   }
 
+  int ch1_mute = digitalRead(CH1_MUTE);
+  int ch2_mute = digitalRead(CH2_MUTE);
+
   if (digitalRead(CH1_INV) == HIGH) {
-    if (clock_count % ch1_unit == ch1_shift * clock_unit) {
+    if (clock_count % ch1_unit == ch1_shift * clock_unit
+        && !ch1_mute) {
       ch1_state(ON);
     }
   } else {
     if (on_base_clock
+        && !ch1_mute
         && clock_count % ch1_unit != ch1_shift * clock_unit) {
       ch1_state(ON);
     }
   }
 
   if (digitalRead(CH2_INV) == HIGH) {
-    if (clock_count % ch2_unit == ch2_shift * clock_unit) {
+    if (clock_count % ch2_unit == ch2_shift * clock_unit
+        && !ch2_mute) {
       ch2_state(ON);
     }
   } else {
     if (on_base_clock
+        && !ch2_mute
         && clock_count % ch2_unit != ch2_shift * clock_unit) {
       ch2_state(ON);
     }
