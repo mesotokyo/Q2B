@@ -214,11 +214,13 @@ void update_state() {
   int ch2_mute = digitalRead(CH2_MUTE);
 
   if (digitalRead(CH1_INV) == HIGH) {
+    // Normal mode
     if (clock_count % ch1_unit == ch1_shift * clock_unit
         && !ch1_mute) {
       ch1_state(ON);
     }
   } else {
+    // Invert mode
     if (on_base_clock
         && !ch1_mute
         && clock_count % ch1_unit != ch1_shift * clock_unit) {
@@ -227,14 +229,18 @@ void update_state() {
   }
 
   if (digitalRead(CH2_INV) == HIGH) {
-    if (clock_count % ch2_unit == ch2_shift * clock_unit
+    // Normal mode
+    if ((clock_count % ch2_unit == ch2_shift * clock_unit
+         || digitalRead(CH1_SIDE))
         && !ch2_mute) {
       ch2_state(ON);
     }
   } else {
+    // Invert mode
     if (on_base_clock
         && !ch2_mute
-        && clock_count % ch2_unit != ch2_shift * clock_unit) {
+        && (clock_count % ch2_unit != ch2_shift * clock_unit
+            || digitalRead(CH1_SIDE))) {
       ch2_state(ON);
     }
   }
